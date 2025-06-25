@@ -1,0 +1,67 @@
+
+"use client";
+
+import React, {
+  useState,
+  useEffect,
+  useCallback,
+  ReactNode,
+} from "react";
+import type { Group } from "@/types";
+import { mockGroups } from "@/data/mock";
+import { useAuth } from "@/hooks/use-auth";
+import { GroupContext } from "@/contexts/group-context";
+
+const GROUPS_STORAGE_KEY = "groups-app-groups";
+
+export function GroupProvider({ children }: { children: ReactNode }) {
+  const { currentUser } = useAuth();
+  const [groups, setGroups] = useState<Group[]>([]);
+  const [selectedGroupId, setSelectedGroupId] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!currentUser) return;
+
+    try {
+      const storedData = window.localStorage.getItem(GROUPS_STORAGE_KEY);
+      const allGroups = storedData ? JSON.parse(storedData) : mockGroups;
+      setGroups(allGroups);
+
+      if(!storedData) {
+        window.localStorage.setItem(GROUPS_STORAGE_KEY, JSON.stringify(allGroups));
+      }
+
+      if (allGroups.length > 0 && !selectedGroupId) {
+        setSelectedGroupId(allGroups[0].id);
+      }
+    } catch (error) {
+      console.error("Failed to access local storage for groups", error);
+      setGroups(mockGroups);
+      if(mockGroups.length > 0 && !selectedGroupId) {
+        setSelectedGroupId(mockGroups[0].id);
+      }
+    }
+  }, [currentUser, selectedGroupId]);
+
+  const selectGroup = useCallback((id: string | null) => {
+    setSelectedGroupId(id);
+  }, []);
+  
+  if (!currentUser) return null;
+
+  const myGroups = groups.filter(g => g.members.some(m => m.id === currentUser.id));
+
+  const selectedGroup =
+    myGroups.find((g) => g.id === selectedGroupId) || myGroups[0] || null;
+
+  const contextValue = {
+    groups: myGroups,
+    selectedGroup,
+    currentUser,
+    selectGroup,
+  };
+
+  return (
+    <GroupContext.Provider value={contextValue}>{children}</GroupContext.Provider>
+  );
+}
