@@ -1,0 +1,19 @@
+{
+  "name": "discord-firebase-chat",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "firebase": "^11.10.0",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "tailwind": "^4.0.0",
+    "vite": "^6.3.5"
+  }
+}
