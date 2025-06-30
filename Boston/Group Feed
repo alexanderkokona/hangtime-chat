@@ -1,0 +1,46 @@
+
+"use client";
+
+import { useGroups } from "@/hooks/use-groups";
+import { ScrollArea } from "./ui/scroll-area";
+import React from "react";
+import Image from "next/image";
+
+export function GroupFeed() {
+  const { selectedGroup } = useGroups();
+  
+  if (!selectedGroup) {
+    return (
+      <div className="flex-1 flex items-center justify-center bg-secondary">
+        <p className="text-muted-foreground">Select a group to see the feed.</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex-1 flex justify-center bg-secondary">
+      <ScrollArea className="w-full max-w-2xl px-4">
+        <div className="py-4 space-y-4">
+            <header className="bg-card rounded-lg shadow-sm overflow-hidden">
+                <Image 
+                    src={selectedGroup.bannerUrl} 
+                    alt={selectedGroup.name} 
+                    width={800} 
+                    height={250} 
+                    className="w-full h-48 object-cover"
+                    data-ai-hint={selectedGroup['data-ai-hint-banner']}
+                />
+                <div className="p-4">
+                    <h1 className="text-2xl font-bold">{selectedGroup.name}</h1>
+                    <p className="text-muted-foreground">{selectedGroup.description}</p>
+                </div>
+            </header>
+            <div className="bg-card rounded-lg shadow-sm p-8 text-center mt-4">
+                <h2 className="text-xl font-semibold">Content Removed</h2>
+                <p className="text-muted-foreground mt-2">The ability to view and create posts has been removed as requested.</p>
+            </div>
+        </div>
+      </ScrollArea>
+    </div>
+  );
+}

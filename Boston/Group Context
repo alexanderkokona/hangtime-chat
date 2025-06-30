@@ -1,0 +1,13 @@
+"use client";
+
+import { createContext } from "react";
+import type { Group, User } from "@/types";
+
+export interface GroupContextType {
+  groups: Group[];
+  selectedGroup: Group | null;
+  currentUser: User;
+  selectGroup: (id: string | null) => void;
+}
+
+export const GroupContext = createContext<GroupContextType | null>(null);
