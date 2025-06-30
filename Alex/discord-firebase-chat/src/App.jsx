@@ -1,4 +1,3 @@
-// src/App.jsx
 import React, { useEffect, useState } from "react";
 import { onAuthStateChanged, signInWithPopup, signOut } from "firebase/auth";
 import { auth, provider } from "./firebase";
@@ -22,14 +21,14 @@ const App = () => {
   return (
     <div className="App">
       <header>
-        <h1>Discord Chat Clone</h1>
+        <h1>HangTime Chat</h1>
         {user ? (
           <button onClick={logout}>Logout</button>
         ) : (
           <button onClick={login}>Login with Google</button>
         )}
       </header>
-      {user ? <ChatRoom /> : <p>Please login to start chatting.</p>}
+      {user ? <ChatRoom /> : <p>Please log in to join the conversation.</p>}
     </div>
   );
 };

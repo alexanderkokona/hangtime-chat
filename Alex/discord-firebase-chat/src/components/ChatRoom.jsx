@@ -1,4 +1,3 @@
-// src/components/ChatRoom.jsx
 import React, { useState, useEffect } from "react";
 import {
   collection,
@@ -8,14 +7,12 @@ import {
   onSnapshot,
   serverTimestamp,
 } from "firebase/firestore";
-import { auth, db } from "../firebase";
-import Message from "./Message";
+import { db, auth } from "../firebase";
 
 const ChatRoom = () => {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
 
-  // Listen for new messages
   useEffect(() => {
     const q = query(collection(db, "messages"), orderBy("timestamp"));
     const unsubscribe = onSnapshot(q, (snapshot) => {
@@ -43,14 +40,16 @@ const ChatRoom = () => {
     <div className="chat-room">
       <div className="messages">
         {messages.map((msg) => (
-          <Message key={msg.id} message={msg} />
+          <div key={msg.id} className={msg.uid === auth.currentUser.uid ? "user" : "guest"}>
+            <p><strong>{msg.name}:</strong> {msg.text}</p>
+          </div>
         ))}
       </div>
-      <form onSubmit={sendMessage} className="message-form">
+      <form onSubmit={sendMessage}>
         <input
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          placeholder="Say something nice..."
+          placeholder="Type your message"
         />
         <button type="submit">Send</button>
       </form>
